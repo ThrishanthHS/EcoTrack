@@ -53,12 +53,18 @@ section[data-testid="stSidebar"] *{color:#c8bfb0 !important;}
 section[data-testid="stSidebar"] label{font-size:0.73rem !important;font-weight:600 !important;color:#8a8070 !important;letter-spacing:0.07em !important;text-transform:uppercase !important;}
 
 /* ── INPUTS ── */
-div[data-baseweb="select"]>div{background:#121212 !important;border:1px solid rgba(201,168,76,0.2) !important;border-radius:6px !important;}
-div[data-baseweb="select"] span{color:#d8d0c0 !important;font-size:0.85rem !important;}
-ul[role="listbox"]{background:#121212 !important;border:1px solid rgba(201,168,76,0.15) !important;}
-ul[role="listbox"] li{color:#c8bfb0 !important;font-size:0.85rem !important;}
-ul[role="listbox"] li:hover{background:rgba(201,168,76,0.08) !important;color:#C9A84C !important;}
-ul[role="option"][aria-selected="true"]{background:rgba(201,168,76,0.12) !important;color:#C9A84C !important;}
+div[data-baseweb="select"]>div{background:linear-gradient(135deg,#141210,#1a1810) !important;border:1px solid rgba(201,168,76,0.22) !important;border-radius:7px !important;}
+div[data-baseweb="select"] span{color:#d8d0c0 !important;font-size:0.85rem !important;font-weight:400 !important;}
+ul[role="listbox"]{background:#111008 !important;border:1px solid rgba(201,168,76,0.18) !important;border-radius:8px !important;box-shadow:0 8px 32px rgba(0,0,0,0.7) !important;}
+ul[role="listbox"] li{color:#c0b8a8 !important;font-size:0.84rem !important;padding:10px 14px !important;border-bottom:1px solid rgba(201,168,76,0.04) !important;}
+ul[role="listbox"] li:hover{background:linear-gradient(90deg,rgba(201,168,76,0.1),transparent) !important;color:#e8d898 !important;}
+ul[role="option"][aria-selected="true"]{background:linear-gradient(90deg,rgba(201,168,76,0.14),transparent) !important;color:#C9A84C !important;font-weight:600 !important;}
+/* dataframe */
+.stDataFrame{border:1px solid rgba(201,168,76,0.1) !important;border-radius:8px !important;overflow:hidden !important;}
+.stDataFrame thead tr th{background:linear-gradient(135deg,#141210,#1a1810) !important;color:#C9A84C !important;font-size:0.76rem !important;letter-spacing:0.06em !important;text-transform:uppercase !important;font-weight:600 !important;border-bottom:1px solid rgba(201,168,76,0.15) !important;}
+.stDataFrame tbody tr td{background:#0d0d0d !important;color:#c0b8a8 !important;font-size:0.82rem !important;border-bottom:1px solid rgba(201,168,76,0.05) !important;}
+.stDataFrame tbody tr:hover td{background:rgba(201,168,76,0.04) !important;}
+[data-testid="stDataFrameResizable"]{background:#0d0d0d !important;}
 .stSlider>div>div>div{background:rgba(201,168,76,0.18) !important;}
 .stSlider>div>div>div>div{background:#C9A84C !important;}
 [data-testid="stTickBarMin"],[data-testid="stTickBarMax"]{color:#8a8070 !important;font-size:0.72rem !important;}
@@ -427,7 +433,7 @@ else:
                 </div>
             </div>""", unsafe_allow_html=True)
 
-            # ── Emission Breakdown — Horizontal Bars ─
+            # ── Emission Breakdown — Pie + Gauge ─────
             st.markdown("<div class='sec-lbl'>Where your carbon comes from</div>", unsafe_allow_html=True)
 
             transport_em = (distance*0.21*TRAFFIC_FACTOR) if transport=="private" else (distance*0.05)
@@ -436,33 +442,59 @@ else:
             internet_em  = internet_time*30*0.03
             grocery_em   = grocery*0.5
             other_em     = max(predicted - transport_em - diet_em - screen_em - internet_em - grocery_em, 30)
-            total_check  = transport_em + diet_em + screen_em + internet_em + grocery_em + other_em
 
-            categories = [
-                ("Commute & Travel", transport_em, "#C9A84C"),
-                ("Food & Diet",      diet_em,      "#9a7acd"),
-                ("TV & Devices",     screen_em,    "#5a9acd"),
-                ("Internet",         internet_em,  "#4aaa6a"),
-                ("Groceries",        grocery_em,   "#cd6a8a"),
-                ("Other",            other_em,     "#5a5a5a"),
-            ]
+            col_pie, col_gauge = st.columns(2)
 
-            st.markdown("<div class='card a4' style='padding:24px 28px;'>", unsafe_allow_html=True)
-            bar_html = "<div style='display:flex;flex-direction:column;gap:14px;'>"
-            for name, val, color in categories:
-                pct = (val / total_check * 100) if total_check > 0 else 0
-                bar_html += f"""
-                <div>
-                    <div style='display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;'>
-                        <div style='font-size:0.82rem;font-weight:500;color:#c0b8a8;'>{name}</div>
-                        <div style='font-size:0.8rem;color:{color};font-weight:600;'>{val:.0f} kg &nbsp;<span style='color:#4a4540;font-weight:400;font-size:0.72rem;'>({pct:.0f}%)</span></div>
-                    </div>
-                    <div style='background:#1a1a1a;border-radius:4px;height:6px;overflow:hidden;'>
-                        <div style='height:100%;width:{pct:.1f}%;background:{color};border-radius:4px;animation:lineGrow 1.2s ease both;'></div>
-                    </div>
-                </div>"""
-            bar_html += "</div>"
-            st.markdown(bar_html + "</div>", unsafe_allow_html=True)
+            with col_pie:
+                fig_pie = go.Figure(go.Pie(
+                    labels=["Commute & Travel","Food & Diet","TV & Devices","Internet","Groceries","Other"],
+                    values=[transport_em, diet_em, screen_em, internet_em, grocery_em, other_em],
+                    hole=0.55,
+                    marker=dict(
+                        colors=["#C9A84C","#9a7acd","#5a9acd","#4aaa6a","#cd6a8a","#4a4a4a"],
+                        line=dict(color="#080808", width=2)
+                    ),
+                    textfont=dict(color="#e8e0d0", size=11, family="Inter"),
+                    hovertemplate="<b>%{label}</b><br>%{value:.0f} kg carbon<br>%{percent}<extra></extra>"
+                ))
+                fig_pie.update_layout(
+                    title=dict(text="Where your carbon comes from",
+                               font=dict(color="#a09880", size=12, family="Inter")),
+                    paper_bgcolor="#0f0f0f", plot_bgcolor="#0f0f0f",
+                    legend=dict(font=dict(color="#a09880", size=11, family="Inter"),
+                                bgcolor="rgba(0,0,0,0)"),
+                    margin=dict(t=44, b=8, l=8, r=8), height=320
+                )
+                st.plotly_chart(fig_pie, use_container_width=True)
+
+            with col_gauge:
+                circ_g = 2*3.14159*42
+                filled_g = circ_g*(1 - score/100)
+                fig_gauge = go.Figure(go.Indicator(
+                    mode="gauge+number",
+                    value=score,
+                    title={"text":"Green Score","font":{"color":"#a09880","size":12,"family":"Inter"}},
+                    number={"suffix":" / 100","font":{"color":"#C9A84C","size":38,"family":"Cormorant Garamond"}},
+                    gauge={
+                        "axis":{"range":[0,100],
+                                "tickcolor":"#2a2a2a",
+                                "tickfont":{"color":"#5a5248","size":10}},
+                        "bar":{"color":"#C9A84C","thickness":0.25},
+                        "bgcolor":"#0f0f0f",
+                        "bordercolor":"rgba(201,168,76,0.08)",
+                        "steps":[
+                            {"range":[0,35],  "color":"#150a0a"},
+                            {"range":[35,60], "color":"#151200"},
+                            {"range":[60,80], "color":"#0a1500"},
+                            {"range":[80,100],"color":"#081a00"},
+                        ],
+                    }
+                ))
+                fig_gauge.update_layout(
+                    paper_bgcolor="#0f0f0f", font_color="#c8bfb0",
+                    margin=dict(t=44, b=20, l=40, r=40), height=320
+                )
+                st.plotly_chart(fig_gauge, use_container_width=True)
 
             # ── What's Driving It ─────────────────
             st.markdown("<div class='sec-lbl'>What is driving your footprint</div>", unsafe_allow_html=True)
