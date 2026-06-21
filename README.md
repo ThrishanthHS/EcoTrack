@@ -79,59 +79,32 @@ emissions and a colour-coded green score timeline.
 ## How the Agentic Pipeline Works
 
 Your Carbon Profile
-
 │
-
 ▼
-
 ┌─────────────────┐
-
 │   Agent 1       │  Reads session data → structures your carbon profile
-
 │   Data Ingestion│  into a clean dictionary for downstream agents
-
 └────────┬────────┘
-
 │
-
 ▼
-
 ┌─────────────────┐
-
 │   Agent 2       │  Sends profile to Groq LLM → identifies your top 3
-
 │   LLM Reasoner  │  emission drivers with plain explanations and actions
-
 └────────┬────────┘
-
 │
-
 ▼
-
 ┌─────────────────┐
-
 │   Agent 3       │  Builds targeted search queries per driver → fetches
-
 │   Web Search    │  live results via DuckDuckGo → Groq summarises findings
-
 └────────┬────────┘
-
 │
-
 ▼
-
 ┌─────────────────┐
-
 │   Agent 4       │  Takes everything above → generates a personalised
-
 │   Action Planner│  7-day roadmap with daily tasks and impact explanations
-
 └────────┬────────┘
-
 │
-
 ▼
-
 Your 7-Day Carbon
 
 Reduction Roadmap
