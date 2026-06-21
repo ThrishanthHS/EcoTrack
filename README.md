@@ -160,6 +160,7 @@ surfaces the error rather than producing broken output.
 
 ## Project Structure
 
+```
 EcoTrack/
 │
 ├── app.py                    # Main Streamlit application — all 4 tabs
@@ -177,13 +178,12 @@ EcoTrack/
 │
 ├── Ecotrack_rf_model.pkl     # Trained Random Forest model
 ├── ecotrack_history.db       # Auto-generated local history (SQLite)
-│
 ├── requirements.txt          # Python dependencies
 ├── .env.example              # Environment variable template
 ├── .gitignore                # Git ignore rules
 ├── LICENSE                   # MIT License
 └── README.md                 # This file
-
+```
 ---
 
 ## Getting Started
