@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, SystemMessage
 from ddgs import DDGS
+from reasoner import run_reasoner_agent
 
 load_dotenv()
 

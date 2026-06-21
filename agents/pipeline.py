@@ -7,10 +7,10 @@ from typing import TypedDict
 from dotenv import load_dotenv
 from langgraph.graph import StateGraph, END
 
-from ingestion     import run_ingestion_agent
-from reasoner      import run_reasoner_agent
-from web_search    import run_web_search_agent
-from action_planner import run_action_planner_agent
+from agents.ingestion      import run_ingestion_agent
+from agents.reasoner       import run_reasoner_agent
+from agents.web_search     import run_web_search_agent
+from agents.action_planner import run_action_planner_agent
 
 load_dotenv()
 
