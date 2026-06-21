@@ -1,5 +1,5 @@
 # EcoTrack — Personal Carbon Intelligence Platform
-
+[![Live App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://thrishanthhs-ecotrack.streamlit.app)
 > Know your impact. Change your habits. Track your progress.
 
 EcoTrack is a free, open-source carbon footprint calculator built specifically 
